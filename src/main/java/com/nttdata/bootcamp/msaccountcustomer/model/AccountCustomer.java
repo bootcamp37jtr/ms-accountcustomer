@@ -1,6 +1,5 @@
 package com.nttdata.bootcamp.msaccountcustomer.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -20,13 +19,14 @@ import lombok.Setter;
 public class AccountCustomer {
 	
 	@Id
-	private Long accountId;
-	private Integer productId;
+	private String id;
+	private String productId;
 	private String numberAccount; // numero de cuenta
-	private String numberInterbankAccount; // numero de cuenta
-	private BigDecimal availableBalance; // saldo disponible
-	private BigDecimal contableBalance; // saldo contable
-	private Integer customerId;
+	private String numberInterbankAccount; // numero de cuenta interbancaria
+	private Double availableBalance; // saldo disponible
+	private Double contableBalance; // saldo contable
+	private String customerId;
+	private String indDel; // indicador registro eliminado
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	 
