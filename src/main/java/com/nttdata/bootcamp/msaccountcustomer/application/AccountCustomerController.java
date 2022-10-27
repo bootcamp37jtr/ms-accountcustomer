@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.nttdata.bootcamp.msaccountcustomer.external.model.Customer;
+import com.nttdata.bootcamp.msaccountcustomer.external.model.MyCustomException;
 import com.nttdata.bootcamp.msaccountcustomer.model.AccountCustomer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +28,34 @@ import reactor.core.publisher.Mono;
 public class AccountCustomerController {
 	
 	@Autowired
+	WebClient.Builder webClientBuilder;
+	
+	@Autowired
 	AccountCustomerService accountCustomerService;
 	
 	@PostMapping
 	public Mono<AccountCustomer> insertAccountCustomer(@RequestBody AccountCustomer accountCustomer){
 		accountCustomer.setCreatedAt(new Date());
 		accountCustomer.setContableBalance(accountCustomer.getAvailableBalance());
-		return accountCustomerService.crearCuenta(Mono.just(accountCustomer));
+		
+	return getUserRating(accountCustomer.getCustomerId()).flatMap(c->{
+		 return accountCustomerService.crearCuenta(Mono.just(accountCustomer));
+	 });
+		
 	}
+	
+	private Mono<Customer> getUserRating(String userId) {
+		  return webClientBuilder.build()
+		    .get()
+		    .uri("http://service-customer/customer/" + userId)
+		    .retrieve()
+		    .bodyToMono(Customer.class).onErrorResume(MyCustomException.class, ex->{
+		    	 log.error(ex.getMessage());
+		            return Mono.empty();
+		    });
+		}
+	
+	
 	
 	
 	@GetMapping("/{id}")
