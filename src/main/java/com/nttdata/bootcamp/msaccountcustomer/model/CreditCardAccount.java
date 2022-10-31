@@ -11,26 +11,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Document
+@Document(collection = "creditcardaccount")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountCustomer {
+public class CreditCardAccount {
 	
 	@Id
 	private String id;
-	private String productId;
-	private String numberAccount; // numero de cuenta
-	private String numberInterbankAccount; // numero de cuenta interbancaria
-	private Double availableBalance; // saldo disponible
-	private Double contableBalance; // saldo contable
-	private String customerId;
-	private String indDel; // indicador registro eliminado
+	private String numberCard;
+	private String  productId;
+	private String indPrimary;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date createdAt;
-	
-	private Integer maxQuantOperComisiion;
-	private Double comissionvalue;
-	 
 }
