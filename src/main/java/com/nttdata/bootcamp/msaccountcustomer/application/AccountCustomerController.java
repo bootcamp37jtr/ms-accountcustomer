@@ -19,6 +19,7 @@ import com.nttdata.bootcamp.msaccountcustomer.external.model.MyCustomException;
 import com.nttdata.bootcamp.msaccountcustomer.model.AccountCustomer;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -62,6 +63,29 @@ public class AccountCustomerController {
 	public Mono<ResponseEntity<AccountCustomer>> findById(@PathVariable String id) {
 		log.info(id);
 		return accountCustomerService.findById(id)
+				.map(p -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(p))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
+	}
+	
+	/**
+	 * •	Permitir elaborar un resumen consolidado de un cliente con todos los productos que
+	 *  pueda tener en el banco
+	 * */
+	@GetMapping("/customer/{customerId}")
+	public Flux<AccountCustomer> findByCostumer(@PathVariable String customerId) {
+		log.info(customerId);
+		return accountCustomerService.findByCustomerId(customerId);
+	}
+	
+	
+	/**
+	 * •	Consultar el saldo de la cuenta principal asociada a la tarjeta de débito. 
+	 * 
+	 * */
+	@GetMapping("/numberCard/{numberCard}")
+	public Mono<ResponseEntity<AccountCustomer>> findByNumberCard(@PathVariable String numberCard) {
+		log.info(numberCard);
+		return accountCustomerService.findByNumberCard(numberCard)
 				.map(p -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(p))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}

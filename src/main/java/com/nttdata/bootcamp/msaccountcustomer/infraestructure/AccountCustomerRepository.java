@@ -11,4 +11,6 @@ import reactor.core.publisher.Flux;
 public interface AccountCustomerRepository extends ReactiveMongoRepository<AccountCustomer, String> {
 		
 	Flux<AccountCustomer> findAllByProductIdIn(Iterable<String> string);
+	
+	Flux<AccountCustomer> findByCustomerId(String customerId);
 }
